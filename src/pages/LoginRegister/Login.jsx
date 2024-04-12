@@ -15,7 +15,7 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({username , password }),
       });
 
       if (!response.ok) {
@@ -25,6 +25,15 @@ const Login = () => {
       const data = await response.json();
       console.log("Here comes the data");
       console.log(data.message);
+
+      if (data.message !== 'Login successful') {
+        alert('Invalid username or password');
+        return;
+      }
+
+      window.sessionStorage.setItem('username', username);
+      window.location.href = '/homepage';
+
     } catch (error) {
       console.error('Error:', error);
     }
@@ -32,6 +41,7 @@ const Login = () => {
 
   return (
     <div>
+      <div style={{marginTop: "10%"}}></div>
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>

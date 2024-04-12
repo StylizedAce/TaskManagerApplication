@@ -1,42 +1,61 @@
 #root {
-  max-width: 1280px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  text-align: center !important;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Below are existing things that need adjustments */
+
+input {
+
+  border-radius: 7px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.taskImg {
+  width: 450;
+  height: 450;
+  border-radius: 10px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+
+
+/* Below are for custom animations and effects: */
+
+.banner {
+
+  background-color: #52AAEA;
+
 }
 
-.card {
-  padding: 2em;
+Figure {
+
+  background-color: rgba(163, 113, 47, 0.534);
+  border-radius: 10px;
 }
 
-.read-the-docs {
-  color: #888;
+Figure:hover {
+  transform: scale(1.1);
+  transition: transform 0.25s;
+  opacity: 0.8;
+  color: #f9f9f9;
+
+}
+
+
+.options {
+  display: flex;
+  justify-content: left;
+  text-align: left;
+  gap: 1em;
+  padding-left: 5%;
+  background-color: #393838 !important;
+  border: 2px solid rgb(87, 54, 54);
+  
+}
+
+.options:hover {
+  border-color: #f9f9f9;
+  transform: scale(1.03);
+  transition: transform 0.25s;
+  background-color: #7a7878 !important;
 }

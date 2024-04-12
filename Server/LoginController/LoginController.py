@@ -3,7 +3,7 @@ from flask_cors import cross_origin
 
 
 class LogRegController:
-    @cross_origin()  # Apply CORS to this route handler
+    @cross_origin(origins='*')  # Apply CORS to this route handler
     def login(data, db):
         user = db.users.find_one({'username': data['username'], 'password': data['password']})
         if user:

@@ -5,7 +5,8 @@ from LoginController.LoginController import LogRegController
 
 app = Flask(__name__)
 
-cors = CORS(app, origins='*')
+cors = CORS(app, origins='*', allow_headers=['Content-Type', 'Authorization', 'Access-Control-Allow-Origin', 'Access-Control-Allow-Methods', 'Access-Control-Allow-Headers']
+            , methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 
 @app.route('/start')
 def start():
