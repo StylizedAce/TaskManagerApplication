@@ -50,7 +50,7 @@ const Register = () => {
   };
 
   return (
-    <div>
+    <div style={{textAlign: "center"}}>
       
       <div style={{marginTop: "10%"}}></div>
       <h2>Register</h2>

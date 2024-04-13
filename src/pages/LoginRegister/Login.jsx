@@ -16,7 +16,7 @@ const Login = () => {
 
     try {
       console.log(JSON.stringify({ username, password }))
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div style={{textAlign: "center"}}>
       <div style={{marginTop: "10%"}}></div>
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
