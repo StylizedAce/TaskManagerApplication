@@ -2,25 +2,29 @@ import { useEffect, useState } from "react";
 import Task from "./Task";
 import axios from "axios";
 import NewTaskPopup from "./NewTaskPopup";
+import EditTaskPopup from "./EditTaskPopup";
 
 function MyTasks() {
   const [tasks, setTasks] = useState([]);
-  const [showPopup, setShowPopup] = useState(false);
+  const [showCreatePopup, setShowCreatePopup] = useState(false);
+  const [showEditPopup, setShowEditPopup] = useState(false);
 
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
+  const toggleEditPopup = () => {
+    setShowEditPopup(!showEditPopup);
+  };
+
+  const toggleCreatePopup = () => {
+    setShowCreatePopup(!showCreatePopup);
   };
 
   const fetchTasks = async () => {
     const username = window.sessionStorage.getItem("username");
     try {
       return await axios.get(`/api/get_tasks?username=${username}`);
-
     } catch (error) {
       console.error("Error:", error);
     }
   };
-  
 
   const handleSubmitTask = async (e) => {
     e.preventDefault();
@@ -29,21 +33,40 @@ function MyTasks() {
     const taskTitle = e.target.taskTitle.value;
     const taskDescription = e.target.taskDescription.value;
     const taskDueDate = e.target.taskDueDate.value;
-    const creationDate = new Date().toISOString();
+    const creationDate = new Date().toLocaleDateString(); // Format the creation date as per your requirement
     const taskImage = e.target.taskImage.files[0];
 
-    axios
-      .post("/api/add_task", {
+    // TODO: Consider if this is smart. Get the latest id so we can create a new one incrumentally
+    try {
+      const latestTaskResponse = await axios.get(
+        `/api/get_latest_task_id?username=${username}`
+      );
+      let latestTaskId = 1; // <--- Incase we have to start from scratch with a new acc
+      console.log(latestTaskResponse.data);
+      if (latestTaskResponse.data.next_task_id) {
+        latestTaskId = latestTaskResponse.data.next_task_id;
+      }
+
+      // New object in the making
+      const newTask = {
+        task_id: latestTaskId, // <--- Incremental id
+        title: taskTitle,
+        description: taskDescription,
+        CreationDate: creationDate,
+      };
+
+      const response = await axios.post("/api/add_task", {
         username,
-        taskTitle,
-        taskDescription,
-        taskDueDate,
-        creationDate,
-        taskImage,
-      })
-      .then((response) => {
-        console.log(response.data);
+        task: newTask,
       });
+
+      console.log(response.data.message);
+
+      setShowCreatePopup(false);
+      window.location.reload(); // Reload the page to reflect the changes
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   useEffect(() => {
@@ -54,18 +77,34 @@ function MyTasks() {
     }
 
     const promise = fetchTasks();
-    promise.then(response => {
-      console.log("Data received:", response.data.tasks);
-      if (Array.isArray(response.data.tasks)) {
-        setTasks(response.data.tasks);
-      } else {
-        console.error("Received data is not an array:", response.data.tasks);
-      }
-    }).catch(error => {
-      console.error("Error fetching tasks:", error);
-    });
-}, []);
+    promise
+      .then((response) => {
+        console.log("Data received:", response.data.tasks);
+        if (Array.isArray(response.data.tasks)) {
+          setTasks(response.data.tasks);
+        } else {
+          console.error("Received data is not an array:", response.data.tasks);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching tasks:", error);
+      });
+  }, []);
 
+  const handleDeleteTask = async (task) => {
+    const username = window.sessionStorage.getItem("username");
+    window.localStorage.removeItem(username + "taskImage" + task.title);
+    try {
+      const response = await axios.delete(
+        `/api/delete_task/${task.task_id}?username=${username}`
+      );
+      
+      window.location.reload();
+      console.log(response.data.message);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div className="my-tasks">
@@ -79,7 +118,7 @@ function MyTasks() {
         </div>
 
         <div className="col-4">
-          <button className="add" onClick={togglePopup}>
+          <button className="add" onClick={toggleCreatePopup}>
             <div className="col-12">
               <h3>New task</h3>
             </div>
@@ -89,22 +128,23 @@ function MyTasks() {
 
       <div className="row" style={{ margin: "1%" }}></div>
 
-      {/* Map over tasks array and render Task components */}
       {tasks.map((task, index) => (
         <Task
-          key={index} // Assuming _id is an object with a $oid property
+          key={index}
           title={task.title}
           description={task.description}
           creationDate={task.CreationDate}
-          // Add other props as needed
+          handleDelete={() => handleDeleteTask(task)}
         />
       ))}
 
       <NewTaskPopup
-        showPopup={showPopup}
-        togglePopup={togglePopup}
+        showPopup={showCreatePopup}
+        togglePopup={toggleCreatePopup}
         handleSubmit={handleSubmitTask}
       />
+
+      <EditTaskPopup showPopup={showEditPopup} togglePopup={toggleEditPopup} />
     </div>
   );
 }
