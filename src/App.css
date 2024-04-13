@@ -1,7 +1,6 @@
 #root {
   max-width: 100%;
   margin: 0 auto;
-  text-align: center !important;
 }
 
 /* Below are existing things that need adjustments */
@@ -15,6 +14,13 @@ input {
   width: 450;
   height: 450;
   border-radius: 10px;
+}
+
+.taskText {
+  font-size: 1.3 em;
+  font-weight: bold;
+  color: #f9f9f9;
+
 }
 
 
@@ -58,4 +64,81 @@ Figure:hover {
   transform: scale(1.03);
   transition: transform 0.25s;
   background-color: #7a7878 !important;
+}
+
+/* Task stuffs */
+
+.task-container {
+  border: 1px solid black;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.task-image {
+  width: 300px;
+  height: 300px;
+}
+
+.task-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+/* Task popup */
+
+.new-task-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0); /* Initially transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none; /* Allow clicks to pass through initially */
+}
+
+.new-task-popup.show {
+  background-color: rgba(0, 0, 0, 0.9); /* Fade in the background */
+  pointer-events: auto; /* Enable clicks when visible */
+}
+
+.popup-content {
+  background-color: rgb(33, 31, 31);
+  border-radius: 10px;
+  padding: 20px;
+  width: 400px;
+  transform: scale(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.new-task-popup.show .popup-content {
+  transform: scale(1);
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.popup-body {
+  margin-bottom: 20px;
+}
+
+.close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
 }

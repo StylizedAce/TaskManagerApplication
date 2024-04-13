@@ -5,6 +5,7 @@ import axios from 'axios'
 import Login from './pages/LoginRegister/Login'
 import Register from './pages/LoginRegister/Register'
 import Homepage from './pages/homepage/Homepage'
+import MyTasks from './pages/homepage/MyTasks'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -32,6 +33,7 @@ function App() {
         <Route path='login' element={<Login/>} />
         <Route path='register' element={<Register/>} />
         <Route path='/homepage' element={<Homepage/>} />
+        <Route path='/mytasks' element={<MyTasks/>} />
         <Route path='*' element={<h1>404 Not Found</h1>} />
       </Routes>
     
