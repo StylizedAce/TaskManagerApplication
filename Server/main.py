@@ -32,16 +32,31 @@ def register():
 def getTasks():
     # Retrieve the username from the request parameters
     username = request.args.get('username')
-    print(username)
+    return TaskController.getTasks(username, db)
+
+@app.route('/api/add_task', methods=['POST'])
+def addTask():
+    data = request.json
+    return TaskController.addTask(data['username'], data['task'], db)
+
+@app.route('/api/delete_task/<task_id>', methods=['DELETE'])
+def delete_task(task_id):
+    username = request.args.get('username')
+    return TaskController.deleteTask(username, task_id, db)
+
+@app.route('/api/get_latest_task_id', methods=['GET'])
+def get_latest_task_id():
+    username = request.args.get('username')
+    return TaskController.get_latest_task_id(username, db)
+
+@app.route('/api/edit_task/<task_id>', methods=['PUT'])
+def edit_task():
     
-    entries = db.tasks.find({"username": username})
+    task_id = {task_id}
+    username = request.args.get('username')
+    data = request.json
+    return TaskController.updateTask(data, db)
 
-    tasks = []
-    for entry in entries:
-        tasks.extend(entry['tasks'])    
-
-    print(tasks)
-    return jsonify({'tasks': tasks})
 
 
 if __name__ == '__main__':
