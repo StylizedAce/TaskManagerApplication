@@ -13,7 +13,7 @@ const Register = () => {
     const newPassword = e.target.value;
     setPassword(newPassword);
 
-    // Check password requirements
+    // Checking password requirements
     const isValid = newPassword.length >= 8 && /[A-Z]/.test(newPassword);
     setPasswordValid(isValid);
 
@@ -39,7 +39,7 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/register", {
+      const response = await axios.post("/api/register", {
         username,
         password,
       });
