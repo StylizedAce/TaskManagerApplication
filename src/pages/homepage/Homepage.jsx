@@ -1,7 +1,19 @@
+import { useEffect, useState } from "react";
 import Figure from "./CardComponent";
 import myTasks from './assets/myTasks.jpeg';
 
 function Homepage() {
+    
+    const [logOut, setLogOut] = useState(false)
+
+    useEffect(() => {
+        if(logOut){
+            window.sessionStorage.clear()
+            window.location.href = "/login"
+        }
+    }, [logOut])
+
+
   return (
     <div>
         <div className="banner" style={{ height: "100px", width: "100%"}}></div>
@@ -21,7 +33,7 @@ function Homepage() {
                 <h3>Account settings</h3>
             </div>
             </button>
-            <button className="options">
+            <button className="options" onClick={() => setLogOut(true)}>
             <div className="col-12">
                 <h3>Logout</h3>
             </div>

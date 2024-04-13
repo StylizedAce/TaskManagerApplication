@@ -5,6 +5,12 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  if (window.sessionStorage.getItem('username')) {
+    window.location.href = '/homepage';
+  }
+
+
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
