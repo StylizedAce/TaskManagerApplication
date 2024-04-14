@@ -23,10 +23,22 @@ class TaskController:
             return jsonify({'error': 'User not found'})
         
     
-    def updateTask(task, db):
-        db.tasks.update_one({'_id': task['_id']}, {'$set': task})
-        return jsonify({'message': 'Task updated'})
-    
+    def updateTask(username, task_id, updated_task, db):
+        try:
+            db.tasks.update_one({'username': username, 'tasks.task_id': int(task_id)},
+                                {'$set': {
+                                    'tasks.$.title': updated_task['title'],
+                                    'tasks.$.description': updated_task['description'],
+                                    'tasks.$.CreationDate': updated_task['CreationDate'],
+                                    'tasks.$.DueDate': updated_task['DueDate'],
+                                }})
+            
+            return jsonify({'message': 'Task updated successfully'})
+        except Exception as e:
+            print("Error:", e)
+            return jsonify({'error': 'Failed to update task'})
+
+
     
     def deleteTask(username, task_id, db):
         user = db.tasks.find_one({"username": username})    
