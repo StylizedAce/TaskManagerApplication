@@ -51,7 +51,6 @@ def get_latest_task_id():
 
 @app.route('/api/update_task/<task_id>', methods=['PUT'])
 def edit_task(task_id):
-    
     username = request.args.get('username')
     updatedTask = request.json.get('task')
     print("Here is the updated task", updatedTask)

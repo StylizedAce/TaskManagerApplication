@@ -25,13 +25,11 @@ const EditTaskPopup = ({
       }
 
 
-      console.log("existingTask.DueDate", existingTask.DueDate);
-      
 
 
-      setTaskTitle(existingTask.title);
-      setTaskDescription(existingTask.description);
-      setTaskDueDate(existingTask.DueDate);
+      setTaskTitle(existingTask.title || "");
+      setTaskDescription(existingTask.description || "");
+      setTaskDueDate(existingTask.DueDate || "");
     }
   }, [existingTask]);
 
@@ -92,7 +90,7 @@ const EditTaskPopup = ({
                 className="form-control"
                 id="taskDueDate"
                 name="taskDueDate"
-                defaultValue={existingTask.DueDate}
+                value={taskDueDate}
                 onChange={handleInputChange}
               />
             </div>
