@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import ImageCompressor from 'image-compressor.js';
 
-const Task = ({ imageSrc, title, description, creationDate, dueDate, handleDelete, handleEdit }) => {
+const Task = ({ imageSrc, title, description, creationDate, dueDate, handleDelete, toggleEdit }) => {
   const [done, setDone] = useState(false);
   const [imageSource, setImageSource] = useState(null);
   const [imageSet, setImageSet] = useState(false);
@@ -60,12 +60,12 @@ const Task = ({ imageSrc, title, description, creationDate, dueDate, handleDelet
           <p className='task-text'>Due Date: {dueDate}</p>
         </div>
       </div>
-      <div style={{ padding: "2%" }}>
+      <div style={{ padding: "2%", width: "12%"}}>
         <div className='row'>
           <button style={{ alignSelf: "flex-end", marginBottom: "5%" }} className="task-button" onClick={handleToggle}>{done ? 'Undo' : 'Mark as Done'}</button>
         </div>
         <div className='row'>
-          <button style={{ alignSelf: "flex-end", marginBottom: "5%" }} className="task-button" onClick={handleEdit}> Edit </button>
+          <button style={{ alignSelf: "flex-end", marginBottom: "5%" }} className="task-button" onClick={toggleEdit}> Edit </button>
         </div>
         <div className='row'>
           <button style={{ alignSelf: "flex-end" }} className="task-button" onClick={handleDelete}> Delete </button>

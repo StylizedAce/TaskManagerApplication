@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import ImageCompressor from 'image-compressor.js';
 
 const NewTaskPopup = ({ showPopup, togglePopup, handleSubmit }) => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [taskImage, setTaskImage] = useState(null);
   const [taskDueDate, setTaskDueDate] = useState('');
+  const fileInputRef = useRef(null); // Ref to file input element
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -17,11 +19,31 @@ const NewTaskPopup = ({ showPopup, togglePopup, handleSubmit }) => {
     }
   };
 
-  const handleFileInputChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setTaskImage(file);
-    }
+  const handleFileInputChange = (e) => {
+
+    const username = window.sessionStorage.getItem('username');
+    const file = e.target.files[0];
+
+    new ImageCompressor(file, {
+        quality: 0.3,
+        success(result) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const imageData = reader.result;
+            localStorage.setItem(username + 'taskImage' + taskTitle, imageData);
+            if (fileInputRef.current) {
+              fileInputRef.current.style.display = 'none';
+            }
+          };
+          reader.readAsDataURL(result);
+        },
+        error(err) {
+          console.error('Image compression failed:', err.message);
+        },
+      });
+
+
+      
   };
 
   return (

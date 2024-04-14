@@ -8,9 +8,20 @@ function MyTasks() {
   const [tasks, setTasks] = useState([]);
   const [showCreatePopup, setShowCreatePopup] = useState(false);
   const [showEditPopup, setShowEditPopup] = useState(false);
+  const [existingTask, setExistingTask] = useState({});
+
+
+  const initiateEdit = (task) => {
+    setExistingTask(task);
+    toggleEditPopup();
+  };
 
   const toggleEditPopup = () => {
     setShowEditPopup(!showEditPopup);
+
+
+
+
   };
 
   const toggleCreatePopup = () => {
@@ -53,6 +64,7 @@ function MyTasks() {
         title: taskTitle,
         description: taskDescription,
         CreationDate: creationDate,
+        DueDate: taskDueDate,
       };
 
       const response = await axios.post("/api/add_task", {
@@ -106,6 +118,48 @@ function MyTasks() {
     }
   };
 
+  const handleSubmitEdit = async (e) => {
+    e.preventDefault();
+
+    const oldtitle = existingTask.title;
+    console.log("old title is", oldtitle);
+
+   
+
+
+    const username = window.sessionStorage.getItem("username");
+    const taskTitle = e.target.taskTitle.value;
+    const taskDescription = e.target.taskDescription.value;
+    const taskDueDate = e.target.taskDueDate.value;
+    const creationDate = new Date().toLocaleDateString(); // Format the creation date as per your requirement
+
+    const image = localStorage.getItem(username + "taskImage" + oldtitle);
+    localStorage.removeItem(username + "taskImage" + oldtitle);
+    localStorage.setItem(username + "taskImage" + e.target.taskTitle.value, image);
+
+    const updatedTask = {
+      task_id: existingTask.task_id,
+      title: taskTitle,
+      description: taskDescription,
+      CreationDate: creationDate,
+      DueDate: taskDueDate,
+    };
+    try {
+      const response = await axios.put(`/api/update_task/${existingTask.task_id}?username=${username}`, {
+        task: updatedTask,
+      });
+
+
+
+      console.log("rsponse is", response.data.message);
+
+      setShowEditPopup(false); // Reload the page to reflect the changes
+      window.location.reload();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
   return (
     <div className="my-tasks">
       <div className="banner" style={{ height: "100px", width: "100%" }}></div>
@@ -134,7 +188,9 @@ function MyTasks() {
           title={task.title}
           description={task.description}
           creationDate={task.CreationDate}
+          dueDate={task.DueDate}
           handleDelete={() => handleDeleteTask(task)}
+          toggleEdit={() => initiateEdit(task)}
         />
       ))}
 
@@ -144,7 +200,14 @@ function MyTasks() {
         handleSubmit={handleSubmitTask}
       />
 
-      <EditTaskPopup showPopup={showEditPopup} togglePopup={toggleEditPopup} />
+<EditTaskPopup
+  showPopup={showEditPopup}
+  togglePopup={toggleEditPopup} // Pass togglePopup function
+  setTogglePopup={setShowEditPopup}
+  existingTask={existingTask}
+  handleSubmitEdit={handleSubmitEdit}
+/>
+
     </div>
   );
 }
