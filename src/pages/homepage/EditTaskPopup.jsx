@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 const EditTaskPopup = ({
   showPopup,
   togglePopup,
-  handleSubmit,
+  setTogglePopup,
+  handleSubmitEdit,
   existingTask,
   username,
 }) => {
@@ -22,9 +23,15 @@ const EditTaskPopup = ({
       if (image) {
         setTaskImage(image);
       }
-      setTaskTitle(existingTask.title || "");
-      setTaskDescription(existingTask.description || "");
-      setTaskDueDate(existingTask.dueDate || "");
+
+
+      console.log("existingTask.DueDate", existingTask.DueDate);
+      
+
+
+      setTaskTitle(existingTask.title);
+      setTaskDescription(existingTask.description);
+      setTaskDueDate(existingTask.DueDate);
     }
   }, [existingTask]);
 
@@ -47,7 +54,7 @@ const EditTaskPopup = ({
   };
 
   return (
-    <div className={`new-task-popup ${showPopup ? "show" : ""}`}>
+    <div className={`edit-task-popup ${showPopup ? "show" : ""}`}>
       <div className="popup-content">
         <div className="popup-header">
           <h2>{existingTask ? "Edit Task" : "New Task"}</h2>
@@ -56,7 +63,7 @@ const EditTaskPopup = ({
           </button>
         </div>
         <div className="popup-body">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmitEdit}>
             <div className="form-group">
               <label htmlFor="taskTitle">Title:</label>
               <input
@@ -85,7 +92,7 @@ const EditTaskPopup = ({
                 className="form-control"
                 id="taskDueDate"
                 name="taskDueDate"
-                value={taskDueDate}
+                defaultValue={existingTask.DueDate}
                 onChange={handleInputChange}
               />
             </div>
@@ -103,9 +110,11 @@ const EditTaskPopup = ({
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={togglePopup}>
+                onClick={() => togglePopup()} // Call togglePopup function
+              >
                 Cancel
               </button>
+
               <button type="submit" className="btn btn-primary">
                 {existingTask ? "Save Changes" : "Create"}
               </button>

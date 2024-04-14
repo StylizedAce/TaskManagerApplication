@@ -49,13 +49,13 @@ def get_latest_task_id():
     username = request.args.get('username')
     return TaskController.get_latest_task_id(username, db)
 
-@app.route('/api/edit_task/<task_id>', methods=['PUT'])
-def edit_task():
+@app.route('/api/update_task/<task_id>', methods=['PUT'])
+def edit_task(task_id):
     
-    task_id = {task_id}
     username = request.args.get('username')
-    data = request.json
-    return TaskController.updateTask(data, db)
+    updatedTask = request.json.get('task')
+    print("Here is the updated task", updatedTask)
+    return TaskController.updateTask(username, task_id, updatedTask, db)
 
 
 
