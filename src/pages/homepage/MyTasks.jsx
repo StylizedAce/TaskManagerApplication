@@ -151,7 +151,7 @@ function MyTasks() {
 
 
 
-      console.log("rsponse is", response.data.message);
+      console.log("response is", response.data.message);
 
       setShowEditPopup(false); // Reload the page to reflect the changes
       window.location.reload();

@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import ImageCompressor from "image-compressor.js";
 
 const EditTaskPopup = ({
   showPopup,
@@ -11,8 +12,8 @@ const EditTaskPopup = ({
 }) => {
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
-  const [taskImage, setTaskImage] = useState(null);
   const [taskDueDate, setTaskDueDate] = useState("");
+  const fileInputRef = useRef(null); // Ref to file input element
 
   // Set initial values if an existing task is provided
   useEffect(() => {
@@ -20,12 +21,6 @@ const EditTaskPopup = ({
       const image = localStorage.getItem(
         username + "taskImage" + existingTask.title
       );
-      if (image) {
-        setTaskImage(image);
-      }
-
-
-
 
       setTaskTitle(existingTask.title || "");
       setTaskDescription(existingTask.description || "");
@@ -44,11 +39,42 @@ const EditTaskPopup = ({
     }
   };
 
-  const handleFileInputChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setTaskImage(file);
+  function removeImage() {
+    const username = window.sessionStorage.getItem("username");
+
+    localStorage.removeItem(username + "taskImage" + taskTitle);
+
+    console.log("username: ", username);
+    console.log("taskTitle: ", taskTitle);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.style.display = "block";
     }
+
+  }
+
+  const handleFileInputChange = (event) => {
+  
+    const username = window.sessionStorage.getItem("username");
+    const file = event.target.files[0];
+
+    new ImageCompressor(file, {
+      quality: 0.3,
+      success(result) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const imageData = reader.result;
+          localStorage.setItem(username + "taskImage" + taskTitle, imageData);
+          if (fileInputRef.current) {
+            fileInputRef.current.style.display = "none";
+          }
+        };
+        reader.readAsDataURL(result);
+      },
+      error(err) {
+        console.error("Image compression failed:", err.message);
+      },
+    });
   };
 
   return (
@@ -104,7 +130,10 @@ const EditTaskPopup = ({
                 onChange={handleFileInputChange}
               />
             </div>
-            <div className="button-group">
+
+            <div
+              className="button-group"
+              style={{ display: "flex", gap: "0.5em" }}>
               <button
                 type="button"
                 className="btn btn-secondary"
@@ -113,9 +142,17 @@ const EditTaskPopup = ({
                 Cancel
               </button>
 
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={removeImage}>
+                Remove Image
+              </button>
+
               <button type="submit" className="btn btn-primary">
                 {existingTask ? "Save Changes" : "Create"}
               </button>
+              
             </div>
           </form>
         </div>

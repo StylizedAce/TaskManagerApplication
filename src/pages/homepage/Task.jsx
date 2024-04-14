@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import ImageCompressor from 'image-compressor.js';
 
-const Task = ({ imageSrc, title, description, creationDate, dueDate, handleDelete, toggleEdit }) => {
+const Task = ({ title, description, creationDate, dueDate, handleDelete, toggleEdit }) => {
   const [done, setDone] = useState(false);
+  const [showImageInput, setShowImageInput] = useState(true);
   const [imageSource, setImageSource] = useState(null);
-  const [imageSet, setImageSet] = useState(false);
   const username = window.sessionStorage.getItem('username');
   const fileInputRef = useRef(null); // Ref to file input element
 
@@ -24,10 +24,7 @@ const Task = ({ imageSrc, title, description, creationDate, dueDate, handleDelet
             const imageData = reader.result;
             localStorage.setItem(username + 'taskImage' + title, imageData);
             setImageSource(imageData); // Update image source state
-            setImageSet(true);
-            if (fileInputRef.current) {
-              fileInputRef.current.style.display = 'none';
-            }
+            setShowImageInput(false); // Hide file input
           };
           reader.readAsDataURL(result);
         },
@@ -37,38 +34,52 @@ const Task = ({ imageSrc, title, description, creationDate, dueDate, handleDelet
       });
     }
   };
-  
 
   useEffect(() => {
     const imageData = localStorage.getItem(username + 'taskImage' + title);
-    if (imageData && fileInputRef.current) { // Add check for fileInputRef.current
-      setImageSource(imageData);
-      fileInputRef.current.style.display = 'none'; // Hide file input element
+    if (imageData) {
+      // Attempt to create an Image object
+      const img = new Image();
+      img.onload = () => {
+        setImageSource(imageData);
+        setShowImageInput(false); // Hide file input
+      };
+      img.onerror = () => {
+        setImageSource(null);
+        setShowImageInput(true); // Show file input
+      };
+      img.src = imageData;
+    } else {
+      setImageSource(null);
+      setShowImageInput(true); // Show file input
     }
-  }, [imageSet]);
+  }, [title]);
   
 
   return (
     <div className="task-container">
-      <input ref={fileInputRef} className={`chooseImage${title}`} type="file" id="file" onChange={handleFileInputChange} />
-      {imageSource && <img src={imageSource} alt="Task" className="task-image" />}
+      {imageSource != null && !showImageInput ? (
+        <img src={imageSource} alt="Task" className="task-image" />
+      ) : (
+        <input ref={fileInputRef} type="file" id="file" onChange={handleFileInputChange} />
+      )}
       <div className="task-content">
-        <div style={{ marginLeft: "30%" }}>
+        <div style={{ marginLeft: '30%' }}>
           <h2>{title}</h2>
           <p className='task-text'>{description}</p>
           <p className='task-text'>Creation Date: {creationDate}</p>
           <p className='task-text'>Due Date: {dueDate}</p>
         </div>
       </div>
-      <div style={{ padding: "2%", width: "12%"}}>
+      <div style={{ padding: '2%', width: '12%' }}>
         <div className='row'>
-          <button style={{ alignSelf: "flex-end", marginBottom: "5%" }} className="task-button" onClick={handleToggle}>{done ? 'Undo' : 'Mark as Done'}</button>
+          <button style={{ alignSelf: 'flex-end', marginBottom: '5%' }} className="task-button" onClick={handleToggle}>{done ? 'Undo' : 'Mark as Done'}</button>
         </div>
         <div className='row'>
-          <button style={{ alignSelf: "flex-end", marginBottom: "5%" }} className="task-button" onClick={toggleEdit}> Edit </button>
+          <button style={{ alignSelf: 'flex-end', marginBottom: '5%' }} className="task-button" onClick={toggleEdit}> Edit </button>
         </div>
         <div className='row'>
-          <button style={{ alignSelf: "flex-end" }} className="task-button" onClick={handleDelete}> Delete </button>
+          <button style={{ alignSelf: 'flex-end' }} className="task-button" onClick={handleDelete}> Delete </button>
         </div>
       </div>
     </div>
