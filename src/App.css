@@ -75,6 +75,14 @@ Figure:hover {
   align-items: center;
 }
 
+.task-container-done {
+  background-color: green;
+  border: 1px solid black;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
 .task-image {
   width: 300px;
   height: 300px;

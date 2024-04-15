@@ -36,32 +36,32 @@ const Task = ({ title, description, creationDate, dueDate, handleDelete, toggleE
   };
 
   useEffect(() => {
-    const imageData = localStorage.getItem(username + 'taskImage' + title);
-    if (imageData) {
-      // Attempt to create an Image object
-      const img = new Image();
-      img.onload = () => {
-        setImageSource(imageData);
-        setShowImageInput(false); // Hide file input
-      };
-      img.onerror = () => {
-        setImageSource(null);
-        setShowImageInput(true); // Show file input
-      };
-      img.src = imageData;
-    } else {
+  const imageData = localStorage.getItem(username + 'taskImage' + title);
+  if (imageData) {
+    // Attempt to create an Image object
+    const img = new Image();
+    img.onload = () => {
+      setImageSource(imageData);
+      setShowImageInput(false); // Hide file input
+    };
+    img.onerror = () => {
       setImageSource(null);
       setShowImageInput(true); // Show file input
-    }
-  }, [title]);
-  
+    };
+    img.src = imageData;
+  } else {
+    setImageSource(null);
+    setShowImageInput(true); // Show file input
+  }
+}, [title]);
+
 
   return (
-    <div className="task-container">
+    <div className={done ? "task-container-done" : "task-container"}>
       {imageSource != null && !showImageInput ? (
         <img src={imageSource} alt="Task" className="task-image" />
       ) : (
-        <input ref={fileInputRef} type="file" id="file" onChange={handleFileInputChange} />
+        <input ref={fileInputRef} type="file" accept='.png, .jpeg, .jpg' id="file" onChange={handleFileInputChange} />
       )}
       <div className="task-content">
         <div style={{ marginLeft: '30%' }}>
