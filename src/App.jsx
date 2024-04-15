@@ -7,6 +7,7 @@ import Register from './pages/LoginRegister/Register'
 import Homepage from './pages/homepage/Homepage'
 import MyTasks from './pages/homepage/MyTasks'
 import GoBackButton from './GoBackButton'
+import './Tasks.css'
 
 function App() {
   const [count, setCount] = useState(0)
