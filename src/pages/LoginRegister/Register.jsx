@@ -9,6 +9,13 @@ const Register = () => {
   const [passwordValid, setPasswordValid] = useState(false);
   const [confirmPasswordValid, setConfirmPasswordValid] = useState(false);
 
+
+
+  if (window.sessionStorage.getItem("username")) {
+    window.location.href = "/homepage";
+  }
+
+
   const handlePasswordChange = (e) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
@@ -44,6 +51,11 @@ const Register = () => {
         password,
       });
       console.log(response.data.message);
+
+      window.sessionStorage.setItem("username", username);
+
+  
+      window.location.href = "/homepage";
     } catch (error) {
       console.error("Error:", error.response.data.message);
     }
