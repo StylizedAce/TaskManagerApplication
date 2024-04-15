@@ -67,6 +67,9 @@ const Task = ({ title, description, creationDate, dueDate, handleDelete, toggleE
         <div style={{ marginLeft: '30%' }}>
           <h2>{title}</h2>
           <p className='task-text'>{description}</p>
+          
+          <hr style={{width: "20%" ,  color: "white", scale: "1.3", opacity: "100%", margin: "3%"}}/>
+          
           <p className='task-text'>Creation Date: {creationDate}</p>
           <p className='task-text'>Due Date: {dueDate}</p>
         </div>
