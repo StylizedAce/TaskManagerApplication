@@ -29,7 +29,7 @@ input {
 
 .banner {
 
-  background-color: #52AAEA;
+  background-color: #024757;
 
 }
 
@@ -172,3 +172,27 @@ Figure:hover {
   display: flex;
   justify-content: flex-end;
 }
+
+.go-back-button {
+  background-color: #9296ef;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.go-back-button:hover {
+  background-color: #f9f9f9;
+  transform: scale(1.05);
+  color: #ff6f61;
+}
+
+

@@ -6,6 +6,7 @@ import Login from './pages/LoginRegister/Login'
 import Register from './pages/LoginRegister/Register'
 import Homepage from './pages/homepage/Homepage'
 import MyTasks from './pages/homepage/MyTasks'
+import GoBackButton from './GoBackButton'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -28,6 +29,7 @@ function App() {
   return (
     <>
 
+    <GoBackButton/>
     <BrowserRouter>
       <Routes>
         <Route path='login' element={<Login/>} />
